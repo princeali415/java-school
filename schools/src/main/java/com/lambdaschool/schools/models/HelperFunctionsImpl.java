@@ -1,6 +1,5 @@
-package com.lambdaschool.schools.handlers;
+package com.lambdaschool.schools.models;
 
-import com.lambdaschool.schools.models.ValidationError;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.FieldError;

@@ -1,6 +1,4 @@
-package com.lambdaschool.schools.handlers;
-
-import com.lambdaschool.schools.models.ValidationError;
+package com.lambdaschool.schools.models;
 
 import java.util.List;
 

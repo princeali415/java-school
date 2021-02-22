@@ -1,6 +1,6 @@
 package com.lambdaschool.schools.exceptions;
 
-import com.lambdaschool.schools.handlers.HelperFunctions;
+import com.lambdaschool.schools.models.HelperFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Component;
