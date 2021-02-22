@@ -1,5 +1,6 @@
 package com.lambdaschool.schools.handlers;
 
+import com.lambdaschool.schools.exceptions.ResourceNotFoundException;
 import com.lambdaschool.schools.models.ErrorDetail;
 import com.lambdaschool.schools.models.HelperFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -25,6 +27,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     public RestExceptionHandler()
     {
         super();
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException rnfe)
+    {
+        ErrorDetail errorDetail = new ErrorDetail();
+
+        errorDetail.setTimestamp(new Date());
+        errorDetail.setStatus((HttpStatus.NOT_FOUND.value()));
+        errorDetail.setTitle("Resource Internal Exception");
+        errorDetail.setDetail(rnfe.getMessage());
+        errorDetail.setDeveloperMessage(rnfe.getClass().getName());
+        errorDetail.setErrors((helperFunctions.getConstraintViolation(rnfe)));
+
+        return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -63,6 +80,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         errorDetail.setErrors(helperFunctions.getConstraintViolation(ex));
 
         return new ResponseEntity<>(errorDetail, null, status);
-
     }
+
+
 }
