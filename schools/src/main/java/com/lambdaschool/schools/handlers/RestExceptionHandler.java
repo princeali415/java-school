@@ -3,6 +3,7 @@ package com.lambdaschool.schools.handlers;
 import com.lambdaschool.schools.exceptions.ResourceNotFoundException;
 import com.lambdaschool.schools.models.ErrorDetail;
 import com.lambdaschool.schools.models.HelperFunctions;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -82,5 +83,26 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorDetail, null, status);
     }
 
+    // /students/student/john error
 
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(
+        TypeMismatchException ex,
+        HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request)
+    {
+        ErrorDetail errorDetail = new ErrorDetail();
+        errorDetail.setTimestamp(new Date());
+        errorDetail.setStatus(status.value());
+        errorDetail.setTitle("Rest Internal Exception");
+        errorDetail.setDetail("Found an issue with student: "+ ex.getMessage());
+        errorDetail.setDeveloperMessage(ex.getClass()
+            .getName() + " " + ex.getMostSpecificCause());
+        errorDetail.setErrors(helperFunctions.getConstraintViolation(ex));
+
+        return new ResponseEntity<>(errorDetail,
+            null,
+            status);
+    }
 }
